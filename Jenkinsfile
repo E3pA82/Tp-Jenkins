@@ -27,6 +27,7 @@ pipeline {
         stage('Test') {
             steps {
                 bat 'mvn -f mon-projet test'
+                bat 'exit 1'
             }
         }
 
@@ -56,5 +57,15 @@ pipeline {
                     }
                 }
             }
+    }
+
+    post {
+        failure {
+            emailext(
+            subject: "Jenkins: Build échoué - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "Le build a échoué.\nURL: ${env.BUILD_URL}",
+            to: "harilalaopatricia@gmail.com"
+            )
+        }
     }
 }
